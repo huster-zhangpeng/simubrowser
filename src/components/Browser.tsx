@@ -95,9 +95,13 @@ export function Browser() {
 
   const handleRefresh = () => {
     updateActiveTab({ error: null }); // Clear any previous errors
-    const iframe = document.querySelector(`iframe[data-tab-id="${activeTab.id}"]`);
+    const iframe = document.querySelector(`iframe[data-tab-id="${activeTab.id}"]`) as HTMLIFrameElement;
     if (iframe) {
-      iframe.setAttribute('key', Date.now().toString());
+      const currentSrc = iframe.src;
+      iframe.src = 'about:blank';
+      setTimeout(() => {
+        iframe.src = currentSrc;
+      }, 50);
     }
   };
 
