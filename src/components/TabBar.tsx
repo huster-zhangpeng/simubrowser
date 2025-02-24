@@ -19,7 +19,7 @@ export function TabBar({
 }: TabBarProps) {
   return (
     <div className="flex items-center bg-gray-200 px-2">
-      <div className="flex-1 flex items-center space-x-1 overflow-x-auto">
+      <div className="flex items-center space-x-1 overflow-x-auto">
         {tabs.map((tab) => (
           <div
             key={tab.id}
@@ -44,13 +44,13 @@ export function TabBar({
             </button>
           </div>
         ))}
+        <button
+          onClick={onNewTab}
+          className="p-2 hover:bg-gray-300 rounded-full"
+        >
+          <Plus className="w-4 h-4" />
+        </button>
       </div>
-      <button
-        onClick={onNewTab}
-        className="p-2 hover:bg-gray-300 rounded-full ml-2"
-      >
-        <Plus className="w-4 h-4" />
-      </button>
     </div>
   );
 }
