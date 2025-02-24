@@ -25,8 +25,8 @@ export function AddressBar({ currentUrl, onNavigate, currentUser, onLogout, onSe
   };
 
   return (
-    <div className="flex items-center gap-3">
-      <div className="flex-1 flex items-center bg-white rounded-lg px-3 py-2 shadow-sm border">
+    <div className="flex items-center w-full">
+      <div className="flex flex-1 items-center bg-white rounded-lg px-3 py-2 shadow-sm border mr-2">
         <Search className="w-4 h-4 text-gray-400 mr-2" />
         <input
           type="text"
@@ -37,11 +37,13 @@ export function AddressBar({ currentUrl, onNavigate, currentUser, onLogout, onSe
           placeholder="Enter URL or search"
         />
       </div>
-      <UserAvatar
-        currentUser={currentUser}
-        onLogout={onLogout}
-        onSettings={onSettings}
-      />
+      <div className="ml-auto">
+        <UserAvatar
+          currentUser={currentUser}
+          onLogout={onLogout}
+          onSettings={onSettings}
+        />
+      </div>
     </div>
   );
 }

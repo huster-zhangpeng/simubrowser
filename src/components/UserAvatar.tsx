@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { User, LogOut, Settings, ChevronDown } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { User, LogOut, Settings } from 'lucide-react';
 import { UserType } from '../types';
 
 interface UserAvatarProps {
@@ -10,19 +10,30 @@ interface UserAvatarProps {
 
 export function UserAvatar({ currentUser, onLogout, onSettings }: UserAvatarProps) {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setIsPopupOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const togglePopup = () => {
     setIsPopupOpen(!isPopupOpen);
   };
 
   return (
-    <div className="relative">
+    <div className="relative" ref={containerRef}>
       <button
         onClick={togglePopup}
-        className="flex items-center space-x-2 hover:bg-gray-100 rounded-full p-1 transition-colors duration-200"
+        className="w-8 h-8 rounded-full overflow-hidden hover:ring-2 hover:ring-gray-200 transition-colors duration-200"
       >
-        <div className="relative w-8 h-8 rounded-full overflow-hidden">
-          {currentUser?.avatar ? (
+        {currentUser?.avatar ? (
             <img
               src={currentUser.avatar}
               alt={currentUser.name}
@@ -33,15 +44,13 @@ export function UserAvatar({ currentUser, onLogout, onSettings }: UserAvatarProp
               <User className="w-5 h-5 text-gray-500" />
             </div>
           )}
-        </div>
-        <ChevronDown className="w-4 h-4 text-gray-500" />
       </button>
 
       {isPopupOpen && (
-        <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
-          <div className="p-4 border-b border-gray-200">
+        <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden z-50">
+          <div className="p-3 border-b border-gray-200">
             <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 rounded-full overflow-hidden">
+              <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
                 {currentUser?.avatar ? (
                   <img
                     src={currentUser.avatar}
