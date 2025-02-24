@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { User, LogOut, Settings } from 'lucide-react';
 import { UserType } from '../types';
 
@@ -10,25 +10,13 @@ interface UserAvatarProps {
 
 export function UserAvatar({ currentUser, onLogout, onSettings }: UserAvatarProps) {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        setIsPopupOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   const togglePopup = () => {
     setIsPopupOpen(!isPopupOpen);
   };
 
   return (
-    <div className="relative" ref={containerRef}>
+    <div className="relative">
       <button
         onClick={togglePopup}
         className="w-8 h-8 rounded-full overflow-hidden hover:ring-2 hover:ring-gray-200 transition-colors duration-200"
@@ -47,7 +35,15 @@ export function UserAvatar({ currentUser, onLogout, onSettings }: UserAvatarProp
       </button>
 
       {isPopupOpen && (
-        <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden z-50">
+        <>
+          <div 
+            className="fixed inset-0 bg-black/5 backdrop-blur-sm z-[100]"
+            onClick={() => setIsPopupOpen(false)}
+          />
+          <div 
+            className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden z-[110]"
+            onClick={(e) => e.stopPropagation()}
+          >
           <div className="p-3 border-b border-gray-200">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
@@ -91,6 +87,7 @@ export function UserAvatar({ currentUser, onLogout, onSettings }: UserAvatarProp
             </button>
           </div>
         </div>
+        </>
       )}
     </div>
   );
