@@ -133,19 +133,7 @@ export function Browser() {
         onTabClose={handleCloseTab}
         onNewTab={handleNewTab}
       />
-      <div className="flex items-center space-x-4 p-2 bg-gray-50 border-b">
-        <NavigationBar
-          canGoBack={activeTab.currentHistoryIndex > 0}
-          canGoForward={activeTab.currentHistoryIndex < activeTab.history.length - 1}
-          onBack={handleBack}
-          onForward={handleForward}
-          onRefresh={handleRefresh}
-        />
-        <AddressBar
-          currentUrl={activeTab.url}
-          onNavigate={handleNavigate}
-        />
-      </div>
+
       <div className="flex-1 relative">
         {browserState.tabs.map((tab) => (
           <div
@@ -154,6 +142,19 @@ export function Browser() {
               tab.id === browserState.activeTabId ? 'visible' : 'hidden'
             }`}
           >
+            <div className="flex items-center space-x-4 p-2 bg-gray-50 border-b">
+              <NavigationBar
+                canGoBack={tab.currentHistoryIndex > 0}
+                canGoForward={tab.currentHistoryIndex < tab.history.length - 1}
+                onBack={handleBack}
+                onForward={handleForward}
+                onRefresh={handleRefresh}
+              />
+              <AddressBar
+                currentUrl={tab.url}
+                onNavigate={handleNavigate}
+              />
+            </div>
             {tab.error ? (
               <div className="flex flex-col items-center justify-center h-full bg-gray-50">
                 <div className="bg-white p-8 rounded-lg shadow-md max-w-md text-center">
