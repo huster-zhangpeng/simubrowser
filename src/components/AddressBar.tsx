@@ -41,12 +41,11 @@ export function AddressBar({ currentUrl, onNavigate, currentUser, onLogout, onSe
         />
       </div>
       <div className="flex items-center space-x-2">
-        <ThemeToggle onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')} />
         <UserAvatar
           currentUser={currentUser}
           onLogout={onLogout}
           onSettings={onSettings}
-        />
+        <ThemeToggle onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')} />
       </div>
     </div>
   );
