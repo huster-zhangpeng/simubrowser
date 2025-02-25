@@ -30,4 +30,11 @@ export type Theme = 'light' | 'dark';
 export interface ThemeContextType {
   theme: Theme;
   setTheme: (theme: Theme) => void;
+
+
+export interface ShortcutSite {
+  id: string;
+  title: string;
+  url: string;
+  icon?: string;
 }

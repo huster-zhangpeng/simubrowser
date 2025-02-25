@@ -1,3 +1,42 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .shortcut-card {
+    @apply transition-all duration-300 ease-in-out;
+    @apply rounded-lg shadow-sm hover:shadow-md;
+    @apply p-4 cursor-pointer;
+    @apply border border-gray-200 dark:border-gray-700;
+  }
+
+  .shortcut-grid {
+    @apply grid gap-4;
+    @apply grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6;
+    @apply p-4;
+  }
+
+  .shortcut-icon {
+    @apply text-2xl mb-2;
+    @apply flex items-center justify-center;
+  }
+
+  .shortcut-title {
+    @apply text-sm font-medium;
+    @apply text-gray-700 dark:text-gray-300;
+    @apply text-center truncate;
+  }
+
+  .new-tab-container {
+    @apply min-h-screen w-full;
+    @apply bg-gray-50 dark:bg-gray-900;
+    @apply p-8;
+  }
+
+  .shortcuts-section {
+    @apply max-w-7xl mx-auto;
+    @apply bg-white dark:bg-gray-800;
+    @apply rounded-xl shadow-lg;
+    @apply p-6;
+  }
+}

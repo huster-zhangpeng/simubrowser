@@ -3,14 +3,15 @@ import { v4 as uuidv4 } from 'uuid';
 import { NavigationBar } from './NavigationBar';
 import { AddressBar } from './AddressBar';
 import { TabBar } from './TabBar';
+import NewTabPage from './NewTabPage';
 import { BrowserState, Tab } from '../types';
 import { ShieldAlert } from 'lucide-react';
 
 const createNewTab = (): Tab => ({
   id: uuidv4(),
-  url: 'about:blank',
+  url: 'browser://newtab',
   title: 'New Tab',
-  history: ['about:blank'],
+  history: ['browser://newtab'],
   currentHistoryIndex: 0,
   error: null,
 });
@@ -167,6 +168,8 @@ export function Browser() {
                   </p>
                 </div>
               </div>
+            ) : tab.url === 'browser://newtab' ? (
+              <NewTabPage onNavigate={handleNavigate} />
             ) : (
               <iframe
                 src={tab.url}
