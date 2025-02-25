@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ShortcutSite, Bookmark } from '../types';
 import { useTheme } from '../contexts/ThemeContext';
+import BookmarkBar from './BookmarkBar';
 
 const shortcuts: ShortcutSite[] = [
   {
@@ -120,22 +121,11 @@ const NewTabPage: React.FC<NewTabPageProps> = ({ onNavigate }) => {
         `}>
           Bookmarks
         </h2>
-        {bookmarks.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-            {bookmarks.map((bookmark) => (
-              <ShortcutCard
-                key={bookmark.id}
-                site={{
-                  id: bookmark.id,
-                  title: bookmark.title,
-                  url: bookmark.url,
-                  icon: bookmark.icon || '🔖'
-                }}
-                onClick={handleShortcutClick}
-              />
-            ))}
-          </div>
-        ) : (
+        <BookmarkBar
+          bookmarks={bookmarks}
+          onUpdateBookmarks={setBookmarks}
+        />
+        {bookmarks.length === 0 && (
           <p className={`text-center text-gray-500 dark:text-gray-400 mt-4`}>
             No bookmarks yet. Click the star icon in the address bar to add bookmarks.
           </p>
