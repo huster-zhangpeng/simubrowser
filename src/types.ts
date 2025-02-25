@@ -54,3 +54,16 @@ export interface BookmarkUtils {
   getBookmarkByUrl: (url: string) => Promise<Bookmark | null>;
   updateBookmark: (id: string, data: Partial<Omit<Bookmark, 'id'>>) => Promise<Bookmark>;
 }
+
+export function getDomainFromUrl(url: string): string {
+  if (url === 'about:blank' || url === 'chrome://newtab') {
+    return 'New Tab';
+  }
+
+  try {
+    const urlObj = new URL(url);
+    return urlObj.hostname;
+  } catch (error) {
+    return url;
+  }
+}

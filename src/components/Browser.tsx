@@ -4,7 +4,7 @@ import { NavigationBar } from './NavigationBar';
 import { AddressBar } from './AddressBar';
 import { TabBar } from './TabBar';
 import NewTabPage from './NewTabPage';
-import { BrowserState, Tab } from '../types';
+import { BrowserState, Tab, getDomainFromUrl } from '../types';
 import { ShieldAlert } from 'lucide-react';
 
 const createNewTab = (): Tab => ({
@@ -115,15 +115,13 @@ export function Browser() {
 
   const handleIframeLoad = useCallback((event: React.SyntheticEvent<HTMLIFrameElement>) => {
     try {
-      const title = event.currentTarget.contentDocument?.title;
-      if (title) {
-        updateActiveTab({ title });
-      }
+      const title = getDomainFromUrl(activeTab.url);
+      updateActiveTab({ title });
     } catch (error) {
       // Handle cross-origin restrictions gracefully
       handleIframeError();
     }
-  }, []);
+  }, [activeTab.url]);
 
   return (
     <div className="flex flex-col h-screen bg-gray-100 dark:bg-darkBg">
