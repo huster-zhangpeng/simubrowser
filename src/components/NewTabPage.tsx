@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ShortcutSite, Bookmark } from '../types';
 import { useTheme } from '../contexts/ThemeContext';
+import { TrashIcon } from '@heroicons/react/24/outline';
 
 const shortcuts: ShortcutSite[] = [
   {
@@ -42,31 +43,46 @@ const shortcuts: ShortcutSite[] = [
 ];
 
 interface ShortcutCardProps {
-  site: ShortcutSite;
-  onClick: (url: string) => void;
+  data: ShortcutSite | Bookmark;
+  type: 'bookmark' | 'shortcut';
+  onDelete?: (id: string) => void;
 }
 
-const ShortcutCard: React.FC<ShortcutCardProps> = ({ site, onClick }) => {
+const ShortcutCard: React.FC<ShortcutCardProps> = ({ data, type, onDelete }) => {
   const { theme } = useTheme();
-  
+  const isBookmark = type === 'bookmark';
+
   return (
-    <button
-      onClick={() => onClick(site.url)}
-      className={`
-        w-full p-4 rounded-lg transition-all duration-200
-        ${theme === 'dark' 
-          ? 'bg-gray-800 hover:bg-gray-700' 
-          : 'bg-white hover:bg-gray-50'}
-        shadow-sm hover:shadow-md
-        flex flex-col items-center justify-center gap-2
-        border border-gray-200 dark:border-gray-700
-      `}
-    >
-      <span className="text-2xl">{site.icon}</span>
-      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-        {site.title}
-      </span>
-    </button>
+    <div className="relative group">
+      <a
+        href={data.url}
+        className={`
+          block p-4 rounded-lg transition-all duration-200
+          ${theme === 'dark' 
+            ? 'bg-gray-800 hover:bg-gray-700' 
+            : 'bg-white hover:bg-gray-50'}
+          shadow-sm hover:shadow-md
+          flex items-center gap-3
+          border border-gray-200 dark:border-gray-700
+        `}
+      >
+        <span className="text-2xl w-6 h-6 flex items-center justify-center">
+          {data.icon}
+        </span>
+        <span className="text-sm font-medium text-gray-700 dark:text-gray-300 flex-1 truncate">
+          {data.title}
+        </span>
+      </a>
+      {isBookmark && onDelete && (
+        <button
+          onClick={() => onDelete(data.id)}
+          className="absolute top-2 right-2 p-1.5 rounded-full opacity-0 group-hover:opacity-100
+            transition-opacity duration-200 hover:bg-gray-200 dark:hover:bg-gray-700"
+        >
+          <TrashIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+        </button>
+      )}
+    </div>
   );
 };
 
@@ -78,9 +94,13 @@ const NewTabPage: React.FC<NewTabPageProps> = ({ onNavigate }) => {
   const { theme } = useTheme();
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   
-  const handleShortcutClick = (url: string) => {
-    if (onNavigate) {
-      onNavigate(url);
+  const handleDeleteBookmark = async (id: string) => {
+    try {
+      const updatedBookmarks = bookmarks.filter(bookmark => bookmark.id !== id);
+      localStorage.setItem('bookmarks', JSON.stringify(updatedBookmarks));
+      setBookmarks(updatedBookmarks);
+    } catch (error) {
+      console.error('Error deleting bookmark:', error);
     }
   };
 
@@ -106,11 +126,11 @@ const NewTabPage: React.FC<NewTabPageProps> = ({ onNavigate }) => {
           Quick Access
         </h1>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-          {shortcuts.map((site) => (
+  {shortcuts.map((site) => (
             <ShortcutCard
               key={site.id}
-              site={site}
-              onClick={handleShortcutClick}
+              data={site}
+              type="shortcut"
             />
           ))}
         </div>
@@ -125,13 +145,14 @@ const NewTabPage: React.FC<NewTabPageProps> = ({ onNavigate }) => {
             {bookmarks.map((bookmark) => (
               <ShortcutCard
                 key={bookmark.id}
-                site={{
+                data={{
                   id: bookmark.id,
                   title: bookmark.title,
                   url: bookmark.url,
                   icon: bookmark.icon || '🔖'
                 }}
-                onClick={handleShortcutClick}
+                type="bookmark"
+                onDelete={handleDeleteBookmark}
               />
             ))}
           </div>
