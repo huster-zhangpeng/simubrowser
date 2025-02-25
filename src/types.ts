@@ -47,6 +47,18 @@ export interface Bookmark {
   createdAt: number;
 }
 
+export interface BookmarkProps {
+  bookmark: Bookmark;
+  isDeleteMode: boolean;
+  onDelete: (id: string) => void;
+  onLongPress: () => void;
+}
+
+export interface BookmarkBarProps {
+  bookmarks: Bookmark[];
+  onUpdateBookmarks: (bookmarks: Bookmark[]) => void;
+}
+
 export interface BookmarkUtils {
   addBookmark: (bookmark: Omit<Bookmark, 'id' | 'createdAt'>) => Promise<Bookmark>;
   removeBookmark: (id: string) => Promise<void>;
