@@ -125,7 +125,7 @@ export function Browser() {
   }, []);
 
   return (
-    <div className="flex flex-col h-screen bg-gray-100">
+    <div className="flex flex-col h-screen bg-gray-100 dark:bg-darkBg">
       <TabBar
         tabs={browserState.tabs}
         activeTabId={browserState.activeTabId}
@@ -133,7 +133,6 @@ export function Browser() {
         onTabClose={handleCloseTab}
         onNewTab={handleNewTab}
       />
-
       <div className="flex-1 relative">
         {browserState.tabs.map((tab) => (
           <div
@@ -142,7 +141,7 @@ export function Browser() {
               tab.id === browserState.activeTabId ? 'visible' : 'hidden'
             }`}
           >
-            <div className="flex items-center space-x-4 p-2 bg-gray-50 border-b">
+            <div className="flex items-center space-x-4 p-2 bg-gray-50 dark:bg-darkSecondary border-b dark:border-darkBorder">
               <NavigationBar
                 canGoBack={tab.currentHistoryIndex > 0}
                 canGoForward={tab.currentHistoryIndex < tab.history.length - 1}
@@ -156,13 +155,13 @@ export function Browser() {
               />
             </div>
             {tab.error ? (
-              <div className="flex flex-col items-center justify-center h-full bg-gray-50">
-                <div className="bg-white p-8 rounded-lg shadow-md max-w-md text-center">
+              <div className="flex flex-col items-center justify-center h-full bg-gray-50 dark:bg-darkSecondary">
+                <div className="bg-white dark:bg-darkBg p-8 rounded-lg shadow-md max-w-md text-center dark:shadow-darkSecondary">
                   <ShieldAlert className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
-                  <h2 className="text-xl font-semibold text-gray-800 mb-2">Security Notice</h2>
-                  <p className="text-gray-600">{tab.error}</p>
-                  <p className="text-sm text-gray-500 mt-4">
-                    Try opening <a href={tab.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                  <h2 className="text-xl font-semibold text-gray-800 dark:text-darkText mb-2">Security Notice</h2>
+                  <p className="text-gray-600 dark:text-gray-400">{tab.error}</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-4">
+                    Try opening <a href={tab.url} target="_blank" rel="noopener noreferrer" className="text-primary-light dark:text-primary-dark hover:underline">
                       {tab.url}
                     </a> in a new window instead.
                   </p>

@@ -24,3 +24,10 @@ export interface CurrentUserContextType {
   setCurrentUser: (user: UserType | null) => void;
   isAuthenticated: boolean;
 }
+
+export type Theme = 'light' | 'dark';
+
+export interface ThemeContextType {
+  theme: Theme;
+  setTheme: (theme: Theme) => void;
+}
