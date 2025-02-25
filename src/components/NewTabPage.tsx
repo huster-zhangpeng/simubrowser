@@ -1,5 +1,5 @@
-import React from 'react';
-import { ShortcutSite } from '../types';
+import React, { useState, useEffect } from 'react';
+import { ShortcutSite, Bookmark } from '../types';
 import { useTheme } from '../contexts/ThemeContext';
 
 const shortcuts: ShortcutSite[] = [
@@ -76,12 +76,22 @@ interface NewTabPageProps {
 
 const NewTabPage: React.FC<NewTabPageProps> = ({ onNavigate }) => {
   const { theme } = useTheme();
+  const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   
   const handleShortcutClick = (url: string) => {
     if (onNavigate) {
       onNavigate(url);
     }
   };
+
+  useEffect(() => {
+    const loadBookmarks = async () => {
+      const data = JSON.parse(localStorage.getItem('bookmarks') || '[]') as Bookmark[];
+      const sortedBookmarks = data.sort((a, b) => b.createdAt - a.createdAt);
+      setBookmarks(sortedBookmarks);
+    };
+    loadBookmarks();
+  }, []);
 
   return (
     <div className={`
@@ -104,6 +114,32 @@ const NewTabPage: React.FC<NewTabPageProps> = ({ onNavigate }) => {
             />
           ))}
         </div>
+        <h2 className={`
+          text-2xl font-bold my-8 text-center
+          ${theme === 'dark' ? 'text-white' : 'text-gray-900'}
+        `}>
+          Bookmarks
+        </h2>
+        {bookmarks.length > 0 ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            {bookmarks.map((bookmark) => (
+              <ShortcutCard
+                key={bookmark.id}
+                site={{
+                  id: bookmark.id,
+                  title: bookmark.title,
+                  url: bookmark.url,
+                  icon: bookmark.icon || '🔖'
+                }}
+                onClick={handleShortcutClick}
+              />
+            ))}
+          </div>
+        ) : (
+          <p className={`text-center text-gray-500 dark:text-gray-400 mt-4`}>
+            No bookmarks yet. Click the star icon in the address bar to add bookmarks.
+          </p>
+        )}
       </div>
     </div>
   );
