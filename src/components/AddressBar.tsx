@@ -45,6 +45,7 @@ export function AddressBar({ currentUrl, onNavigate, currentUser, onLogout, onSe
           currentUser={currentUser}
           onLogout={onLogout}
           onSettings={onSettings}
+        />
         <ThemeToggle onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')} />
       </div>
     </div>
