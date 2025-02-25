@@ -1,6 +1,6 @@
 import React from 'react';
 import { Plus, X } from 'lucide-react';
-import { Tab } from '../types';
+import { Tab, getDomainFromUrl } from '../types';
 
 interface TabBarProps {
   tabs: Tab[];
@@ -31,7 +31,7 @@ export function TabBar({
             onClick={() => onTabSelect(tab.id)}
           >
             <span className="truncate max-w-[200px]">
-              {tab.title || 'New Tab'}
+              {getDomainFromUrl(tab.url)}
             </span>
             <button
               onClick={(e) => {

@@ -1,7 +1,7 @@
 import React, { useState, KeyboardEvent, useEffect, useCallback } from 'react';
 import { Search, Star, StarOff } from 'lucide-react';
 import { UserAvatar } from './UserAvatar';
-import { UserType, Bookmark } from '../types';
+import { UserType, Bookmark, getDomainFromUrl } from '../types';
 import { ThemeToggle } from './ThemeToggle';
 import { useTheme } from '../contexts/ThemeContext';
 
@@ -58,7 +58,7 @@ export function AddressBar({ currentUrl, onNavigate, currentUser, onLogout, onSe
       const newBookmark: Bookmark = {
         id: Date.now().toString(),
         url: currentUrl,
-        title: document.title || currentUrl,
+        title: getDomainFromUrl(currentUrl),
         createdAt: Date.now()
       };
       await saveBookmarksToStorage([...bookmarks, newBookmark]);
