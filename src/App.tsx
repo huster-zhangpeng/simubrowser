@@ -1,11 +1,14 @@
 import React from 'react';
 import { Browser } from './components/Browser';
+import { ThemeProvider } from './contexts/ThemeContext';
 
 function App() {
   return (
-    <div className="h-screen bg-gray-100">
-      <Browser />
-    </div>
+    <ThemeProvider>
+      <div className="h-screen bg-gray-100 dark:bg-darkBg">
+        <Browser />
+      </div>
+    </ThemeProvider>
   );
 }
 
