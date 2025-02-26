@@ -60,20 +60,20 @@ export function AddressBar({ currentUrl, onNavigate }: AddressBarProps) {
   }, [currentUrl, isBookmarked]);
 
   return (
-    <div className="flex items-center w-full">
-      <div className="flex flex-1 min-w-0 items-center bg-white dark:bg-darkSecondary rounded-lg px-3 shadow-sm border dark:border-darkBorder">
+    <div className="flex flex-1 min-w-0">
+      <div className="flex flex-1 min-w-0 items-center bg-white dark:bg-darkSecondary rounded-lg px-3 shadow-sm border dark:border-darkBorder transition-all duration-200">
         <Search className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0" />
         <input
           type="text"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyPress={handleKeyPress}
-          className="flex-1 min-w-0 h-8 sm:h-10 outline-none text-sm dark:bg-darkSecondary dark:text-darkText mr-2"
+          className="flex-1 min-w-0 h-8 sm:h-10 outline-none text-sm dark:bg-darkSecondary dark:text-darkText mr-2 text-ellipsis overflow-hidden whitespace-nowrap"
           placeholder="Enter URL or search"
         />
         <button
           onClick={toggleBookmark}
-          className="hover:text-yellow-500"
+          className="hover:text-yellow-500 flex-shrink-0"
           title={isBookmarked ? 'Remove from bookmarks' : 'Add to bookmarks'}
         >
           {isBookmarked ? (

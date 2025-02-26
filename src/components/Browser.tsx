@@ -137,7 +137,7 @@ export function Browser() {
         {browserState.tabs.map((tab) => (
           <div
             key={`${tab.id}-${tab.url}`}
-            className={`absolute inset-0 ${
+            className={`absolute inset-0 flex flex-col overflow-hidden ${
               tab.id === browserState.activeTabId ? 'visible' : 'hidden'
             }`}
           >
@@ -173,7 +173,7 @@ export function Browser() {
             ) : (
               <iframe
                 src={tab.url}
-                className="w-full h-full border-0"
+                className="w-full h-full border-0 flex-1 min-w-0"
                 onLoad={handleIframeLoad}
                 onError={handleIframeError}
                 title={tab.title}
