@@ -18,7 +18,7 @@ export function TabBar({
   onNewTab,
 }: TabBarProps) {
   return (
-    <div className="relative flex items-center bg-gray-200 px-2">
+    <div className="relative flex items-center bg-gray-200 px-2 hidden sm:block">
       <div className="flex-1 relative">
         <div className="flex items-center gap-1 overflow-x-auto snap-x py-1 scroll-smooth touch-pan-x">
           {tabs.map((tab) => (
