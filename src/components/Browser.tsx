@@ -1,7 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { NavigationBar } from './NavigationBar';
-import { AddressBar } from './AddressBar';
 import { TabBar } from './TabBar';
 import { TabCardView } from './TabCardView';
 import NewTabPage from './NewTabPage';
@@ -151,11 +150,10 @@ export function Browser() {
                 onRefresh={handleRefresh}
                 tabs={browserState.tabs}
                 onTabViewOpen={() => setIsTabViewOpen(true)}
-              />
-              <AddressBar
+                onNewTab={handleNewTab}
                 currentUrl={tab.url}
                 onNavigate={handleNavigate}
-              />
+                />
             </div>
             {tab.error ? (
               <div className="flex flex-col items-center justify-center h-full bg-gray-50 dark:bg-darkSecondary">

@@ -54,11 +54,11 @@ const ShortcutCard: React.FC<ShortcutCardProps> = ({ site, onClick }) => {
     <button
       onClick={() => onClick(site.url)}
       className={`
-        w-full p-4 rounded-lg transition-all duration-200
+        w-full p-3 sm:p-4 rounded-lg transition-all duration-200
         ${theme === 'dark' 
           ? 'bg-gray-800 hover:bg-gray-700' 
           : 'bg-white hover:bg-gray-50'}
-        shadow-sm hover:shadow-md
+        hover:scale-105
         flex flex-col items-center justify-center gap-2
         border border-gray-200 dark:border-gray-700
       `}
@@ -96,17 +96,17 @@ const NewTabPage: React.FC<NewTabPageProps> = ({ onNavigate }) => {
 
   return (
     <div className={`
-      min-h-screen w-full p-8
+      min-h-screen w-full p-4 sm:p-8 flex flex-col items-center justify-center
       ${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-50'}
     `}>
-      <div className="max-w-4xl mx-auto">
+      <div className="w-full max-w-4xl mx-auto space-y-8">
         <h1 className={`
-          text-2xl font-bold mb-8 text-center
+          text-3xl font-bold text-center
           ${theme === 'dark' ? 'text-white' : 'text-gray-900'}
         `}>
           Quick Access
         </h1>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
           {shortcuts.map((site) => (
             <ShortcutCard
               key={site.id}

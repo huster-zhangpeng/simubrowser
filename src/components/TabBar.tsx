@@ -18,15 +18,15 @@ export function TabBar({
   onNewTab,
 }: TabBarProps) {
   return (
-    <div className="relative flex items-center bg-gray-200 px-2 hidden sm:block">
+    <div className="relative flex items-center bg-gray-200 px-2 hidden sm:flex">
       <div className="flex-1 relative">
         <div className="flex items-center gap-1 overflow-x-auto snap-x py-1 scroll-smooth touch-pan-x">
           {tabs.map((tab) => (
             <div
               key={tab.id}
-            className={`group flex items-center px-4 py-2 pr-2 rounded-t-lg cursor-pointer snap-start min-w-[120px] sm:min-w-[160px] scroll-ml-6 ${
+            className={`group flex items-center gap-1 px-3 py-2 pr-2 rounded-t-lg cursor-pointer snap-start min-w-[100px] sm:min-w-[140px] md:min-w-[160px] scroll-ml-6 transition-colors ${
               tab.id === activeTabId
-                ? 'bg-white text-gray-800'
+                ? 'bg-white text-gray-800 shadow-sm'
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-50'
             }`}
             onClick={() => onTabSelect(tab.id)}
