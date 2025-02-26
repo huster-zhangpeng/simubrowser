@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { NavigationBar } from './NavigationBar';
 import { AddressBar } from './AddressBar';
 import { TabBar } from './TabBar';
+import { TabCardView } from './TabCardView';
 import NewTabPage from './NewTabPage';
 import { BrowserState, Tab, getDomainFromUrl } from '../types';
 import { ShieldAlert } from 'lucide-react';
@@ -22,6 +23,7 @@ export function Browser() {
     tabs: [initialTab],
     activeTabId: initialTab.id,
   });
+  const [isTabViewOpen, setIsTabViewOpen] = useState(false);
 
   const activeTab = browserState.tabs.find(
     (tab) => tab.id === browserState.activeTabId
@@ -147,6 +149,8 @@ export function Browser() {
                 onBack={handleBack}
                 onForward={handleForward}
                 onRefresh={handleRefresh}
+                tabs={browserState.tabs}
+                onTabViewOpen={() => setIsTabViewOpen(true)}
               />
               <AddressBar
                 currentUrl={tab.url}
@@ -181,6 +185,14 @@ export function Browser() {
           </div>
         ))}
       </div>
-    </div>
-  );
-}
+          <TabCardView
+            isOpen={isTabViewOpen}
+            onClose={() => setIsTabViewOpen(false)}
+            tabs={browserState.tabs}
+            activeTabId={browserState.activeTabId}
+            onTabSelect={(id) => setBrowserState((prev) => ({ ...prev, activeTabId: id }))}
+            onTabClose={handleCloseTab}
+          />
+        </div>
+      );
+    }
