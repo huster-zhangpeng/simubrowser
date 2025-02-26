@@ -1,22 +1,15 @@
 import React, { useState, KeyboardEvent, useEffect, useCallback } from 'react';
 import { Search, Star, StarOff } from 'lucide-react';
-import { UserAvatar } from './UserAvatar';
-import { UserType, Bookmark, getDomainFromUrl } from '../types';
-import { ThemeToggle } from './ThemeToggle';
-import { useTheme } from '../contexts/ThemeContext';
+import { Bookmark, getDomainFromUrl } from '../types';
 
 interface AddressBarProps {
   currentUrl: string;
   onNavigate: (url: string) => void;
-  currentUser?: UserType;
-  onLogout?: () => void;
-  onSettings?: () => void;
 }
 
-export function AddressBar({ currentUrl, onNavigate, currentUser, onLogout, onSettings }: AddressBarProps) {
+export function AddressBar({ currentUrl, onNavigate }: AddressBarProps) {
   const [inputValue, setInputValue] = useState(currentUrl);
   const [isBookmarked, setIsBookmarked] = useState(false);
-  const { theme, setTheme } = useTheme();
 
   const checkIsBookmarked = useCallback(async (url: string) => {
     const bookmarks = await getBookmarksFromStorage();
@@ -68,7 +61,7 @@ export function AddressBar({ currentUrl, onNavigate, currentUser, onLogout, onSe
 
   return (
     <div className="flex items-center w-full">
-      <div className="flex flex-1 min-w-0 items-center bg-white dark:bg-darkSecondary rounded-lg px-3 shadow-sm border dark:border-darkBorder mr-2">
+      <div className="flex flex-1 min-w-0 items-center bg-white dark:bg-darkSecondary rounded-lg px-3 shadow-sm border dark:border-darkBorder">
         <Search className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0" />
         <input
           type="text"
@@ -89,14 +82,6 @@ export function AddressBar({ currentUrl, onNavigate, currentUser, onLogout, onSe
             <StarOff className="w-5 h-5 text-gray-400" />
           )}
         </button>
-      </div>
-      <div className="hidden sm:flex items-center space-x-2 ml-auto">
-        <UserAvatar
-          currentUser={currentUser}
-          onLogout={onLogout}
-          onSettings={onSettings}
-        />
-        <ThemeToggle onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')} />
       </div>
     </div>
   );
