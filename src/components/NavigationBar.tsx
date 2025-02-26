@@ -40,8 +40,8 @@ export function NavigationBar({
 }: NavigationBarProps) {
   const { theme, setTheme } = useTheme();
   return (
-    <div className="flex flex-1 items-center gap-2 p-2 dark:bg-gray-900">
-      <div className="hidden sm:flex items-center gap-2">
+    <div className="flex flex-1 items-center gap-2 p-2 dark:bg-gray-900 min-w-0">
+      <div className="hidden sm:flex items-center gap-2 flex-shrink-0">
         <button
           onClick={onBack}
           disabled={!canGoBack}
@@ -64,12 +64,14 @@ export function NavigationBar({
           onClick={onRefresh}
           className="w-10 h-10 p-3 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
         >
-          <RefreshCw className="text-xl dark:text-gray-400" />
+        <RefreshCw className="text-xl dark:text-gray-400" />
         </button>
       </div>
-      <AddressBar currentUrl={currentUrl} onNavigate={onNavigate} />
+      <div className="flex-1 min-w-0">
+        <AddressBar currentUrl={currentUrl} onNavigate={onNavigate} />
+      </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 flex-shrink-0">
         <div className="sm:hidden flex items-center gap-2">
           <button
             onClick={onNewTab}
