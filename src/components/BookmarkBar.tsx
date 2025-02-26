@@ -45,16 +45,19 @@ const BookmarkBar: React.FC<BookmarkBarProps> = ({ bookmarks, onUpdateBookmarks 
   }
 
   return (
-    <div className="bookmark-container w-full max-w-screen-lg mx-auto px-4 py-2 grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
-      {bookmarks.map(bookmark => (
-        <Bookmark
-          key={bookmark.id}
-          bookmark={bookmark}
-          isDeleteMode={isDeleteMode}
-          onDelete={handleDelete}
-          onLongPress={handleLongPress}
-        />
-      ))}
+    <div className="bookmark-container w-full max-w-screen-lg mx-auto py-1 sm:py-2 overflow-x-auto snap-x touch-pan-x">
+      <div className="flex flex-nowrap gap-2 px-4 min-w-full">
+        {bookmarks.map(bookmark => (
+          <div key={bookmark.id} className="flex-none snap-start">
+            <Bookmark
+              bookmark={bookmark}
+              isDeleteMode={isDeleteMode}
+              onDelete={handleDelete}
+              onLongPress={handleLongPress}
+            />
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
