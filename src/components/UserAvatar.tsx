@@ -19,7 +19,7 @@ export function UserAvatar({ currentUser, onLogout, onSettings }: UserAvatarProp
     <div className="relative">
       <button
         onClick={togglePopup}
-        className="w-8 h-8 rounded-full overflow-hidden hover:ring-2 hover:ring-gray-200 transition-colors duration-200"
+        className="w-6 h-6 sm:w-8 sm:h-8 p-1 sm:p-2 rounded-full overflow-hidden ring-2 ring-gray-200 hover:ring-primary-500 transition-all duration-200 active:scale-95"
       >
         {currentUser?.avatar ? (
             <img
@@ -28,8 +28,8 @@ export function UserAvatar({ currentUser, onLogout, onSettings }: UserAvatarProp
               className="w-full h-full object-cover"
             />
           ) : (
-            <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-              <User className="w-5 h-5 text-gray-500" />
+            <div className="w-full h-full bg-gray-200 flex items-center justify-center touch-action-manipulation">
+              <User className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
             </div>
           )}
       </button>
@@ -46,7 +46,7 @@ export function UserAvatar({ currentUser, onLogout, onSettings }: UserAvatarProp
           >
           <div className="p-3 border-b border-gray-200">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-gray-200">
                 {currentUser?.avatar ? (
                   <img
                     src={currentUser.avatar}

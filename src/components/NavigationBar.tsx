@@ -17,30 +17,30 @@ export function NavigationBar({
   onRefresh,
 }: NavigationBarProps) {
   return (
-    <div className="flex items-center space-x-2">
+    <div className="flex items-center gap-1 sm:gap-2">
       <button
         onClick={onBack}
         disabled={!canGoBack}
-        className={`p-1.5 rounded-full hover:bg-gray-100 ${
+        className={`w-8 h-8 sm:w-10 sm:h-10 p-2 sm:p-3 rounded-full hover:bg-gray-100 ${
           !canGoBack ? 'opacity-50 cursor-not-allowed' : ''
         }`}
       >
-        <ChevronLeft className="w-5 h-5" />
+        <ChevronLeft className="text-lg sm:text-xl" />
       </button>
       <button
         onClick={onForward}
         disabled={!canGoForward}
-        className={`p-1.5 rounded-full hover:bg-gray-100 ${
+        className={`w-8 h-8 sm:w-10 sm:h-10 p-2 sm:p-3 rounded-full hover:bg-gray-100 ${
           !canGoForward ? 'opacity-50 cursor-not-allowed' : ''
         }`}
       >
-        <ChevronRight className="w-5 h-5" />
+        <ChevronRight className="text-lg sm:text-xl" />
       </button>
       <button
         onClick={onRefresh}
-        className="p-1.5 rounded-full hover:bg-gray-100"
+        className="w-8 h-8 sm:w-10 sm:h-10 p-2 sm:p-3 rounded-full hover:bg-gray-100"
       >
-        <RefreshCw className="w-5 h-5" />
+        <RefreshCw className="text-lg sm:text-xl" />
       </button>
     </div>
   );
