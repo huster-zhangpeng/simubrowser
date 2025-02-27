@@ -73,9 +73,10 @@ const ShortcutCard: React.FC<ShortcutCardProps> = ({ site, onClick }) => {
 
 interface NewTabPageProps {
   onNavigate?: (url: string) => void;
+  className?: string;
 }
 
-const NewTabPage: React.FC<NewTabPageProps> = ({ onNavigate }) => {
+const NewTabPage: React.FC<NewTabPageProps> = ({ onNavigate, className }) => {
   const { theme } = useTheme();
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   
@@ -96,8 +97,9 @@ const NewTabPage: React.FC<NewTabPageProps> = ({ onNavigate }) => {
 
   return (
     <div className={`
-      min-h-screen w-full p-4 sm:p-8 flex flex-col items-center justify-center
+      w-full p-4 sm:p-8 flex flex-col items-center justify-center
       ${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-50'}
+      ${className || ''}
     `}>
       <div className="w-full max-w-4xl mx-auto space-y-8">
         <h1 className={`

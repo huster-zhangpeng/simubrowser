@@ -9,9 +9,9 @@ import { ShieldAlert } from 'lucide-react';
 
 const createNewTab = (): Tab => ({
   id: uuidv4(),
-  url: 'browser://newtab',
+  url: '',
   title: 'New Tab',
-  history: ['browser://newtab'],
+  history: [''],
   currentHistoryIndex: 0,
   error: null,
 });
@@ -168,7 +168,7 @@ export function Browser() {
                   </p>
                 </div>
               </div>
-            ) : tab.url === 'browser://newtab' ? (
+) : !tab.url ? (
               <NewTabPage onNavigate={handleNavigate} />
             ) : (
               <iframe
@@ -178,7 +178,7 @@ export function Browser() {
                 onError={handleIframeError}
                 title={tab.title}
                 data-tab-id={tab.id}
-                sandbox="allow-forms allow-scripts allow-modals allow-pointer-lock allow-popups allow-presentation"
+                sandbox="allow-forms allow-scripts allow-same-origin allow-modals allow-pointer-lock allow-popups allow-presentation"
               />
             )}
           </div>
