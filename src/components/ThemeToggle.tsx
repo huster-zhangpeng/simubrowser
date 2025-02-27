@@ -21,11 +21,8 @@ export function ThemeToggle({ onClick }: ThemeToggleProps) {
         focus:outline-none focus:ring-2 
         focus:ring-primary-light focus:ring-opacity-50
         dark:hover:bg-darkSecondary dark:focus:ring-primary-dark
-        fixed bottom-4 right-4 sm:static
-        shadow-lg sm:shadow-none
+        hidden sm:block
         bg-white dark:bg-darkPrimary
-        hover:scale-105 active:scale-95
-        sm:hover:scale-100 sm:active:scale-100
       "
       aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
     >

@@ -178,6 +178,7 @@ export function Browser() {
                 onError={handleIframeError}
                 title={tab.title}
                 data-tab-id={tab.id}
+                sandbox="allow-forms allow-scripts allow-modals allow-pointer-lock allow-popups allow-presentation"
               />
             )}
           </div>
