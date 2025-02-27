@@ -1,6 +1,7 @@
 import React from 'react';
 import { X } from 'lucide-react';
 import { Tab } from '../types';
+import NewTabPage from './NewTabPage';
 
 interface TabCardViewProps {
   isOpen: boolean;
@@ -9,6 +10,7 @@ interface TabCardViewProps {
   activeTabId: string;
   onTabSelect: (tabId: string) => void;
   onTabClose: (tabId: string) => void;
+  onNavigate?: (url: string) => void;
 }
 
 export function TabCardView({
@@ -18,6 +20,7 @@ export function TabCardView({
   activeTabId,
   onTabSelect,
   onTabClose,
+  onNavigate,
 }: TabCardViewProps) {
   if (!isOpen) return null;
 
@@ -69,19 +72,23 @@ export function TabCardView({
               `}
             >
               <div className="aspect-[4/3] bg-gray-50 dark:bg-gray-800">
-                <iframe
-                  src={tab.url}
-                  title={tab.title}
-                  className="w-full h-full pointer-events-none"
-                  sandbox=""
-                />
+                {tab.url ? (
+                  <iframe
+                    src={tab.url}
+                    title={tab.title}
+                    className="w-full h-full pointer-events-none"
+                    sandbox=""
+                  />
+                ) : (
+                  <NewTabPage onNavigate={onNavigate} className="h-full w-full pointer-events-none" />
+                )}
               </div>
               <div className="p-2 bg-white dark:bg-gray-900">
                 <p className="text-sm font-medium truncate dark:text-white">
-                  {tab.title}
+                  {tab.title || "New Tab"}
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                  {tab.url}
+                  {tab.url || "browser://newtab"}
                 </p>
               </div>
               <button
