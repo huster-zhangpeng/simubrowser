@@ -45,16 +45,18 @@ const shortcuts: ShortcutSite[] = [
 interface ShortcutCardProps {
   site: ShortcutSite;
   onClick: (url: string) => void;
+  className?: string;
 }
 
-const ShortcutCard: React.FC<ShortcutCardProps> = ({ site, onClick }) => {
+const ShortcutCard: React.FC<ShortcutCardProps> = ({ site, onClick, className }) => {
   const { theme } = useTheme();
   
   return (
     <button
       onClick={() => onClick(site.url)}
       className={`
-        w-full p-3 sm:p-4 rounded-lg transition-all duration-200
+        w-full rounded-lg transition-all duration-200
+        ${className ? 'p-2' : 'p-3 sm:p-4'}
         ${theme === 'dark' 
           ? 'bg-gray-800 hover:bg-gray-700' 
           : 'bg-white hover:bg-gray-50'}
@@ -63,7 +65,7 @@ const ShortcutCard: React.FC<ShortcutCardProps> = ({ site, onClick }) => {
         border border-gray-200 dark:border-gray-700
       `}
     >
-      <span className="text-2xl">{site.icon}</span>
+      <span className={`${className ? 'text-xl' : 'text-2xl'}`}>{site.icon}</span>
       <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
         {site.title}
       </span>
@@ -97,23 +99,28 @@ const NewTabPage: React.FC<NewTabPageProps> = ({ onNavigate, className }) => {
 
   return (
     <div className={`
-      w-full p-4 sm:p-8 flex flex-col items-center justify-center
+      w-full overflow-auto
+      ${className ? 'aspect-[4/3]' : 'min-h-screen'}
       ${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-50'}
+      ${className ? 'p-2' : ''}
       ${className || ''}
     `}>
-      <div className="w-full max-w-4xl mx-auto space-y-8">
+      <div className={`w-full max-w-6xl mx-auto ${className ? 'p-2 space-y-2' : 'p-4 sm:p-6 md:p-8 space-y-6 sm:space-y-8'}`}>
         <h1 className={`
-          text-3xl font-bold text-center
+          ${className ? 'text-xl' : 'text-3xl'} font-bold text-center
           ${theme === 'dark' ? 'text-white' : 'text-gray-900'}
         `}>
           Quick Access
         </h1>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+        <div className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 
+          ${className ? 'gap-2' : 'gap-4 sm:gap-6 md:gap-8'}
+        `}>
           {shortcuts.map((site) => (
             <ShortcutCard
               key={site.id}
               site={site}
               onClick={handleShortcutClick}
+              className={className}
             />
           ))}
         </div>
