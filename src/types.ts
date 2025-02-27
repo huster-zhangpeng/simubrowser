@@ -68,7 +68,7 @@ export interface BookmarkUtils {
 }
 
 export function getDomainFromUrl(url: string): string {
-  if (url === 'about:blank' || url === 'chrome://newtab') {
+  if (!url || url === 'about:blank' || url === 'browser://newtab') {
     return 'New Tab';
   }
 
