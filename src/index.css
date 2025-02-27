@@ -28,15 +28,50 @@
   }
 
   .new-tab-container {
-    @apply min-h-screen w-full;
+    min-height: 100vh;
+    @apply w-full;
     @apply bg-gray-50 dark:bg-gray-900;
-    @apply p-8;
+    @apply p-4 sm:p-6 md:p-8;
+    @apply overflow-auto;
   }
 
   .shortcuts-section {
     @apply max-w-7xl mx-auto;
     @apply bg-white dark:bg-gray-800;
     @apply rounded-xl shadow-lg;
-    @apply p-6;
+    @apply p-4 sm:p-6 md:p-8;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 768px) {
+  .new-tab-container {
+    height: 100%;
+    min-height: 100vh;
+    @apply py-4;
+  }
+
+  .shortcuts-section {
+    @apply p-4;
+  }
+
+  .shortcut-grid {
+    @apply grid-cols-3 md:grid-cols-4 lg:grid-cols-6;
+    @apply gap-3;
+  }
+
+  .shortcut-card {
+    @apply p-3;
+  }
+}
+
+@supports (-webkit-touch-callout: none) {
+  .new-tab-container {
+    height: -webkit-fill-available;
+  }
+}
+
+@supports not (-webkit-touch-callout: none) {
+  .new-tab-container {
+    height: 100vh;
   }
 }
