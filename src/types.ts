@@ -59,6 +59,35 @@ export interface BookmarkBarProps {
   onUpdateBookmarks: (bookmarks: Bookmark[]) => void;
 }
 
+export interface TabBarProps {
+  tabs: Tab[];
+  activeTabId: string;
+  onTabSelect: (tabId: string) => void;
+  onTabClose: (tabId: string) => void;
+  onNewTab: () => void;
+  isNewTabPage?: boolean;
+}
+
+export interface NavigationBarProps {
+  onBack: () => void;
+  onForward: () => void;
+  onRefresh: () => void;
+  onHome: () => void;
+  onStop: () => void;
+  onNewTab: () => void;
+  onNavigate: (url: string) => void;
+  isLoading: boolean;
+  canGoBack: boolean;
+  canGoForward: boolean;
+  currentUrl: string;
+  tabs: Tab[];
+  onTabViewOpen: () => void;
+  currentUser?: UserType;
+  onLogout?: () => void;
+  onSettings?: () => void;
+  isNewTabPage?: boolean;
+}
+
 export interface BookmarkUtils {
   addBookmark: (bookmark: Omit<Bookmark, 'id' | 'createdAt'>) => Promise<Bookmark>;
   removeBookmark: (id: string) => Promise<void>;

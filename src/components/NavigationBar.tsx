@@ -21,6 +21,7 @@ interface NavigationBarProps {
   currentUser?: UserType;
   onLogout?: () => void;
   onSettings?: () => void;
+  isNewTabPage?: boolean;
 }
 
 export function NavigationBar({
@@ -37,6 +38,7 @@ export function NavigationBar({
   currentUser,
   onLogout,
   onSettings,
+  isNewTabPage = false,
 }: NavigationBarProps) {
   const { theme, setTheme } = useTheme();
   return (
@@ -73,12 +75,14 @@ export function NavigationBar({
 
       <div className="flex items-center gap-2 flex-shrink-0">
         <div className="sm:hidden flex items-center gap-2">
-          <button
-            onClick={onNewTab}
-            className="w-8 h-8 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <Plus className="w-4 h-4 dark:text-gray-400" />
-          </button>
+          {!isNewTabPage && (
+            <button
+              onClick={onNewTab}
+              className="w-8 h-8 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+            >
+              <Plus className="w-4 h-4 dark:text-gray-400" />
+            </button>
+          )}
           <TabCounter tabs={tabs} onClick={onTabViewOpen} />
         </div>
 

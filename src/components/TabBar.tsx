@@ -8,6 +8,7 @@ interface TabBarProps {
   onTabSelect: (tabId: string) => void;
   onTabClose: (tabId: string) => void;
   onNewTab: () => void;
+  isNewTabPage?: boolean;
 }
 
 export function TabBar({
@@ -16,6 +17,7 @@ export function TabBar({
   onTabSelect,
   onTabClose,
   onNewTab,
+  isNewTabPage = false,
 }: TabBarProps) {
   return (
     <div className="relative flex items-center bg-gray-200 px-2 hidden sm:flex">
@@ -45,12 +47,14 @@ export function TabBar({
             </button>
           </div>
           ))}
-        <button
-          onClick={onNewTab}
-          className="p-2 hover:bg-gray-300 rounded-full"
-        >
-          <Plus className="w-4 h-4" />
-        </button>
+        {!isNewTabPage && (
+          <button
+            onClick={onNewTab}
+            className="p-2 hover:bg-gray-300 rounded-full"
+          >
+            <Plus className="w-4 h-4" />
+          </button>
+        )}
         </div>
         <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-gray-200 to-transparent pointer-events-none" />
       </div>
