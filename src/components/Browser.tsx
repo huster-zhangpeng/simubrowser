@@ -1,10 +1,11 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { NavigationBar } from './NavigationBar';
 import { TabBar } from './TabBar';
 import { TabCardView } from './TabCardView';
 import NewTabPage from './NewTabPage';
-import { BrowserState, Tab, getDomainFromUrl } from '../types';
+import { BrowserState, Tab, getDomainFromUrl, BookmarkType } from '../types';
+import BookmarkBar from './BookmarkBar';
 import { ShieldAlert } from 'lucide-react';
 
 const createNewTab = (): Tab => ({
@@ -23,6 +24,15 @@ export function Browser() {
     activeTabId: initialTab.id,
   });
   const [isTabViewOpen, setIsTabViewOpen] = useState(false);
+  const [bookmarks, setBookmarks] = useState<BookmarkType[]>([]);
+
+  useEffect(() => {
+    // 从本地存储加载书签
+    const savedBookmarks = localStorage.getItem('bookmarks');
+    if (savedBookmarks) {
+      setBookmarks(JSON.parse(savedBookmarks));
+    }
+  }, []);
 
   const activeTab = browserState.tabs.find(
     (tab) => tab.id === browserState.activeTabId
@@ -116,11 +126,12 @@ export function Browser() {
 
   const handleIframeLoad = useCallback((event: React.SyntheticEvent<HTMLIFrameElement>) => {
     try {
-      const title = getDomainFromUrl(activeTab.url);
+      const iframe = event.target as HTMLIFrameElement;
+      const title = iframe.contentDocument?.title || getDomainFromUrl(activeTab.url);
       updateActiveTab({ title });
     } catch (error) {
-      // Handle cross-origin restrictions gracefully
-      handleIframeError();
+      const title = getDomainFromUrl(activeTab.url);
+      updateActiveTab({ title });
     }
   }, [activeTab.url]);
 
@@ -131,9 +142,13 @@ export function Browser() {
         activeTabId={browserState.activeTabId}
         onTabSelect={(id) => setBrowserState((prev) => ({ ...prev, activeTabId: id }))}
         onTabClose={handleCloseTab}
-        onNewTab={handleNewTab}
       />
       <div className="flex-1 relative">
+        <BookmarkBar
+          bookmarks={bookmarks}
+          onUpdateBookmarks={setBookmarks}
+          onNavigate={handleNavigate}
+        />
         {browserState.tabs.map((tab) => (
           <div
             key={`${tab.id}-${tab.url}`}
@@ -141,7 +156,7 @@ export function Browser() {
               tab.id === browserState.activeTabId ? 'visible' : 'hidden'
             }`}
           >
-            <div className="flex items-center space-x-4 p-2 bg-gray-50 dark:bg-darkSecondary border-b dark:border-darkBorder">
+            <div className="flex items-center space-x-4 px-2 bg-gray-50 dark:bg-darkSecondary">
               <NavigationBar
                 canGoBack={tab.currentHistoryIndex > 0}
                 canGoForward={tab.currentHistoryIndex < tab.history.length - 1}
@@ -151,9 +166,9 @@ export function Browser() {
                 tabs={browserState.tabs}
                 onTabViewOpen={() => setIsTabViewOpen(true)}
                 onNewTab={handleNewTab}
-                currentUrl={tab.url}
                 onNavigate={handleNavigate}
-                />
+                currentUrl={tab.url}
+              />
             </div>
             {tab.error ? (
               <div className="flex flex-col items-center justify-center h-full bg-gray-50 dark:bg-darkSecondary">
@@ -168,7 +183,7 @@ export function Browser() {
                   </p>
                 </div>
               </div>
-) : !tab.url ? (
+            ) : !tab.url ? (
               <NewTabPage onNavigate={handleNavigate} />
             ) : (
               <iframe
@@ -184,14 +199,14 @@ export function Browser() {
           </div>
         ))}
       </div>
-          <TabCardView
-            isOpen={isTabViewOpen}
-            onClose={() => setIsTabViewOpen(false)}
-            tabs={browserState.tabs}
-            activeTabId={browserState.activeTabId}
-            onTabSelect={(id) => setBrowserState((prev) => ({ ...prev, activeTabId: id }))}
-            onTabClose={handleCloseTab}
-          />
-        </div>
-      );
-    }
+      <TabCardView
+        isOpen={isTabViewOpen}
+        onClose={() => setIsTabViewOpen(false)}
+        tabs={browserState.tabs}
+        activeTabId={browserState.activeTabId}
+        onTabSelect={(id) => setBrowserState((prev) => ({ ...prev, activeTabId: id }))}
+        onTabClose={handleCloseTab}
+      />
+    </div>
+  );
+}

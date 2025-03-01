@@ -7,6 +7,7 @@ interface BookmarkProps {
   isDeleteMode: boolean;
   onDelete: (id: string) => void;
   onLongPress: () => void;
+  onNavigate: (url: string) => void;
 }
 
 const Bookmark: React.FC<BookmarkProps> = ({
@@ -14,6 +15,7 @@ const Bookmark: React.FC<BookmarkProps> = ({
   isDeleteMode,
   onDelete,
   onLongPress,
+  onNavigate,
 }) => {
   const longPressTimer = useRef<NodeJS.Timeout>();
   const { title, url, icon, id } = bookmark;
@@ -31,10 +33,11 @@ const Bookmark: React.FC<BookmarkProps> = ({
   }, []);
 
   const handleClick = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
     if (!isDeleteMode) {
-      window.location.href = url;
+      onNavigate(url);
     }
-  }, [isDeleteMode, url]);
+  }, [isDeleteMode, url, onNavigate]);
 
   const handleDelete = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
