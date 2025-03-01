@@ -17,6 +17,11 @@ const createNewTab = (): Tab => ({
   error: null,
 });
 
+const findEmptyTab = (tabs: Tab[]): string | null => {
+  const emptyTab = tabs.find(tab => tab.url === '');
+  return emptyTab ? emptyTab.id : null;
+};
+
 export function Browser() {
   const initialTab = createNewTab();
   const [browserState, setBrowserState] = useState<BrowserState>({
@@ -59,13 +64,23 @@ export function Browser() {
     });
   };
 
-  const handleNewTab = () => {
-    const newTab = createNewTab();
-    setBrowserState((prev) => ({
-      tabs: [...prev.tabs, newTab],
-      activeTabId: newTab.id,
-    }));
+  const setActiveTabId = (tabId: string) => {
+    setBrowserState(prev => ({ ...prev, activeTabId: tabId }));
   };
+
+  const handleNewTab = useCallback(() => {
+    const emptyTabId = findEmptyTab(browserState.tabs);
+    if (emptyTabId) {
+      setActiveTabId(emptyTabId);
+    } else {
+      const newTab = createNewTab();
+      setBrowserState(prev => ({
+        ...prev,
+        tabs: [...prev.tabs, newTab],
+        activeTabId: newTab.id,
+      }));
+    }
+  }, [browserState.tabs]);
 
   const handleCloseTab = (tabId: string) => {
     setBrowserState((prev) => {
@@ -135,6 +150,8 @@ export function Browser() {
     }
   }, [activeTab.url]);
 
+  const isCurrentTabNewTabPage = activeTab.url === '';
+
   return (
     <div className="flex flex-col h-screen bg-gray-100 dark:bg-darkBg">
       <TabBar
@@ -142,6 +159,7 @@ export function Browser() {
         activeTabId={browserState.activeTabId}
         onTabSelect={(id) => setBrowserState((prev) => ({ ...prev, activeTabId: id }))}
         onTabClose={handleCloseTab}
+        isNewTabPage={isCurrentTabNewTabPage}
       />
       <div className="flex-1 relative">
         <BookmarkBar
@@ -168,6 +186,7 @@ export function Browser() {
                 onNewTab={handleNewTab}
                 onNavigate={handleNavigate}
                 currentUrl={tab.url}
+                isNewTabPage={isCurrentTabNewTabPage}
               />
             </div>
             {tab.error ? (
