@@ -97,6 +97,10 @@ const NewTabPage: React.FC<NewTabPageProps> = ({ onNavigate, className }) => {
     loadBookmarks();
   }, []);
 
+  const handleUpdateBookmarks = (updatedBookmarks: Bookmark[]) => {
+    setBookmarks(updatedBookmarks);
+  };
+
   return (
     <div className={`
       w-full overflow-auto
@@ -132,7 +136,8 @@ const NewTabPage: React.FC<NewTabPageProps> = ({ onNavigate, className }) => {
         </h2>
         <BookmarkBar
           bookmarks={bookmarks}
-          onUpdateBookmarks={setBookmarks}
+          onUpdateBookmarks={handleUpdateBookmarks}
+          onNavigate={onNavigate || (() => {})}
         />
         {bookmarks.length === 0 && (
           <p className={`text-center text-gray-500 dark:text-gray-400 mt-4`}>

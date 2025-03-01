@@ -5,9 +5,10 @@ import Bookmark from './Bookmark';
 interface BookmarkBarProps {
   bookmarks: BookmarkType[];
   onUpdateBookmarks: (bookmarks: BookmarkType[]) => void;
+  onNavigate: (url: string) => void;
 }
 
-const BookmarkBar: React.FC<BookmarkBarProps> = ({ bookmarks, onUpdateBookmarks }) => {
+const BookmarkBar: React.FC<BookmarkBarProps> = ({ bookmarks, onUpdateBookmarks, onNavigate }) => {
   const [isDeleteMode, setIsDeleteMode] = useState(false);
 
   const handleLongPress = useCallback(() => {
@@ -54,6 +55,7 @@ const BookmarkBar: React.FC<BookmarkBarProps> = ({ bookmarks, onUpdateBookmarks 
               isDeleteMode={isDeleteMode}
               onDelete={handleDelete}
               onLongPress={handleLongPress}
+              onNavigate={onNavigate}
             />
           </div>
         ))}
