@@ -1,11 +1,10 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { NavigationBar } from './NavigationBar';
 import { TabBar } from './TabBar';
 import { TabCardView } from './TabCardView';
 import NewTabPage from './NewTabPage';
 import { BrowserState, Tab, getDomainFromUrl, BookmarkType } from '../types';
-import BookmarkBar from './BookmarkBar';
 import { ShieldAlert } from 'lucide-react';
 
 const createNewTab = (): Tab => ({
@@ -29,15 +28,6 @@ export function Browser() {
     activeTabId: initialTab.id,
   });
   const [isTabViewOpen, setIsTabViewOpen] = useState(false);
-  const [bookmarks, setBookmarks] = useState<BookmarkType[]>([]);
-
-  useEffect(() => {
-    // 从本地存储加载书签
-    const savedBookmarks = localStorage.getItem('bookmarks');
-    if (savedBookmarks) {
-      setBookmarks(JSON.parse(savedBookmarks));
-    }
-  }, []);
 
   const activeTab = browserState.tabs.find(
     (tab) => tab.id === browserState.activeTabId
@@ -163,11 +153,6 @@ export function Browser() {
         isNewTabPage={isCurrentTabNewTabPage}
       />
       <div className="flex-1 relative">
-        <BookmarkBar
-          bookmarks={bookmarks}
-          onUpdateBookmarks={setBookmarks}
-          onNavigate={handleNavigate}
-        />
         {browserState.tabs.map((tab) => (
           <div
             key={`${tab.id}-${tab.url}`}
