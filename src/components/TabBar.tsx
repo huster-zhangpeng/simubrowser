@@ -47,14 +47,14 @@ export function TabBar({
             </button>
           </div>
           ))}
-        {!isNewTabPage && (
-          <button
-            onClick={onNewTab}
-            className="p-2 hover:bg-gray-300 rounded-full"
-          >
-            <Plus className="w-4 h-4" />
-          </button>
-        )}
+          {!isNewTabPage && (
+              <button
+                onClick={onNewTab}
+                className="p-2 hover:bg-gray-300 rounded-full"
+              >
+                <Plus className="w-4 h-4" />
+              </button>
+          )}
         </div>
         <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-gray-200 to-transparent pointer-events-none" />
       </div>

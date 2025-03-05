@@ -159,6 +159,7 @@ export function Browser() {
         activeTabId={browserState.activeTabId}
         onTabSelect={(id) => setBrowserState((prev) => ({ ...prev, activeTabId: id }))}
         onTabClose={handleCloseTab}
+        onNewTab={handleNewTab}
         isNewTabPage={isCurrentTabNewTabPage}
       />
       <div className="flex-1 relative">
