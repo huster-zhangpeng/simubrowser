@@ -39,7 +39,13 @@ const shortcuts: ShortcutSite[] = [
     title: 'AtomGit',
     url: 'https://atomgit.com',
     icon: '🤖'
-  }
+  },
+  {
+    id: "7",
+    title: "ChatBox",
+    url: "http://test1.genmeta.net",
+    icon: "🤖",
+  },
 ];
 
 interface ShortcutCardProps {
