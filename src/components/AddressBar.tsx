@@ -2,6 +2,8 @@ import React, { useState, KeyboardEvent, useEffect, useCallback } from 'react';
 import { Search, Star, StarOff } from 'lucide-react';
 import { Bookmark, getDomainFromUrl } from '../types';
 
+const RESERVED_SUBDOMAINS = ['doc', 'docs', 'www', 'console', 'api'];
+
 interface AddressBarProps {
   currentUrl: string;
   onNavigate: (url: string) => void;
@@ -25,7 +27,26 @@ export function AddressBar({ currentUrl, onNavigate }: AddressBarProps) {
     if (e.key === 'Enter') {
       let url = inputValue.trim();
       if (!url.startsWith('http://') && !url.startsWith('https://')) {
-        url = `https://${url}`;
+        // Check if domain is genmeta.net
+        if (url.endsWith('genmeta.net')) {
+          // Extract subdomain if present
+          const parts = url.split('.');
+          if (parts.length == 3) {
+            const subdomain = parts[0];
+            // If subdomain is not reserved, use http://
+            if (!RESERVED_SUBDOMAINS.includes(subdomain)) {
+              url = `http://${url}`;
+            } else {
+              url = `https://${url}`;
+            }
+          } else {
+            // Not match subdomain
+            url = `https://${url}`;
+          }
+        } else {
+          // Not genmeta.net domain
+          url = `https://${url}`;
+        }
       }
       onNavigate(url);
     }
