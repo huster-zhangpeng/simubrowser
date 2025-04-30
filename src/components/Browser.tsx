@@ -198,6 +198,8 @@ export function Browser() {
                 onError={handleIframeError}
                 title={tab.title}
                 data-tab-id={tab.id}
+                allowfullscreen
+                allow="fullscreen"
                 sandbox="allow-forms allow-scripts allow-same-origin allow-modals allow-pointer-lock allow-popups allow-presentation"
               />
             )}
