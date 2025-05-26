@@ -1,10 +1,10 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { NavigationBar } from './NavigationBar';
 import { TabBar } from './TabBar';
 import { TabCardView } from './TabCardView';
 import NewTabPage from './NewTabPage';
-import { BrowserState, Tab, getDomainFromUrl, BookmarkType } from '../types';
+import { BrowserState, Tab, getDomainFromUrl } from '../types';
 import { ShieldAlert } from 'lucide-react';
 
 const createNewTab = (): Tab => ({
@@ -17,7 +17,7 @@ const createNewTab = (): Tab => ({
 });
 
 const findEmptyTab = (tabs: Tab[]): string | null => {
-  const emptyTab = tabs.find(tab => tab.url === '');
+  const emptyTab = tabs.find((tab) => tab.url === '');
   return emptyTab ? emptyTab.id : null;
 };
 
@@ -55,7 +55,7 @@ export function Browser() {
   };
 
   const setActiveTabId = (tabId: string) => {
-    setBrowserState(prev => ({ ...prev, activeTabId: tabId }));
+    setBrowserState((prev) => ({ ...prev, activeTabId: tabId }));
   };
 
   const handleNewTab = useCallback(() => {
@@ -64,7 +64,7 @@ export function Browser() {
       setActiveTabId(emptyTabId);
     } else {
       const newTab = createNewTab();
-      setBrowserState(prev => ({
+      setBrowserState((prev) => ({
         ...prev,
         tabs: [...prev.tabs, newTab],
         activeTabId: newTab.id,
@@ -112,7 +112,9 @@ export function Browser() {
 
   const handleRefresh = () => {
     updateActiveTab({ error: null }); // Clear any previous errors
-    const iframe = document.querySelector(`iframe[data-tab-id="${activeTab.id}"]`) as HTMLIFrameElement;
+    const iframe = document.querySelector(
+      `iframe[data-tab-id="${activeTab.id}"]`
+    ) as HTMLIFrameElement;
     if (iframe) {
       const currentSrc = iframe.src;
       iframe.src = 'about:blank';
@@ -124,30 +126,56 @@ export function Browser() {
 
   const handleIframeError = () => {
     updateActiveTab({
-      error: "This website cannot be displayed in an iframe due to security restrictions.",
-      title: "Cannot Display Content",
+      error:
+        'This website cannot be displayed in an iframe due to security restrictions.',
+      title: 'Cannot Display Content',
     });
   };
 
-  const handleIframeLoad = useCallback((event: React.SyntheticEvent<HTMLIFrameElement>) => {
-    try {
-      const iframe = event.target as HTMLIFrameElement;
-      const title = iframe.contentDocument?.title || getDomainFromUrl(activeTab.url);
-      updateActiveTab({ title });
-    } catch (error) {
-      const title = getDomainFromUrl(activeTab.url);
-      updateActiveTab({ title });
-    }
-  }, [activeTab.url]);
+  const handleIframeLoad = useCallback(
+    (event: React.SyntheticEvent<HTMLIFrameElement>) => {
+      try {
+        const iframe = event.target as HTMLIFrameElement;
+        const title =
+          iframe.contentDocument?.title || getDomainFromUrl(activeTab.url);
+        updateActiveTab({ title });
+      } catch (error) {
+        const title = getDomainFromUrl(activeTab.url);
+        updateActiveTab({ title });
+      }
+    },
+    [activeTab.url]
+  );
 
   const isCurrentTabNewTabPage = activeTab.url === '';
+
+  const handleLinkClick = (event: MessageEvent) => {
+    if (event.data.action === 'open_url') {
+      const newTab = createNewTab();
+      newTab.url = event.data.url as string;
+      setBrowserState((prev) => ({
+        ...prev,
+        tabs: [...prev.tabs, newTab],
+        activeTabId: newTab.id,
+      }));
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('message', handleLinkClick);
+    return () => {
+      window.removeEventListener('message', handleLinkClick);
+    };
+  }, []);
 
   return (
     <div className="flex flex-col h-screen bg-gray-100 dark:bg-darkBg">
       <TabBar
         tabs={browserState.tabs}
         activeTabId={browserState.activeTabId}
-        onTabSelect={(id) => setBrowserState((prev) => ({ ...prev, activeTabId: id }))}
+        onTabSelect={(id) =>
+          setBrowserState((prev) => ({ ...prev, activeTabId: id }))
+        }
         onTabClose={handleCloseTab}
         onNewTab={handleNewTab}
         isNewTabPage={isCurrentTabNewTabPage}
@@ -179,12 +207,23 @@ export function Browser() {
               <div className="flex flex-col items-center justify-center h-full bg-gray-50 dark:bg-darkSecondary">
                 <div className="bg-white dark:bg-darkBg p-8 rounded-lg shadow-md max-w-md text-center dark:shadow-darkSecondary">
                   <ShieldAlert className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
-                  <h2 className="text-xl font-semibold text-gray-800 dark:text-darkText mb-2">Security Notice</h2>
-                  <p className="text-gray-600 dark:text-gray-400">{tab.error}</p>
+                  <h2 className="text-xl font-semibold text-gray-800 dark:text-darkText mb-2">
+                    Security Notice
+                  </h2>
+                  <p className="text-gray-600 dark:text-gray-400">
+                    {tab.error}
+                  </p>
                   <p className="text-sm text-gray-500 dark:text-gray-400 mt-4">
-                    Try opening <a href={tab.url} target="_blank" rel="noopener noreferrer" className="text-primary-light dark:text-primary-dark hover:underline">
+                    Try opening{' '}
+                    <a
+                      href={tab.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary-light dark:text-primary-dark hover:underline"
+                    >
                       {tab.url}
-                    </a> in a new window instead.
+                    </a>{' '}
+                    in a new window instead.
                   </p>
                 </div>
               </div>
@@ -211,7 +250,9 @@ export function Browser() {
         onClose={() => setIsTabViewOpen(false)}
         tabs={browserState.tabs}
         activeTabId={browserState.activeTabId}
-        onTabSelect={(id) => setBrowserState((prev) => ({ ...prev, activeTabId: id }))}
+        onTabSelect={(id) =>
+          setBrowserState((prev) => ({ ...prev, activeTabId: id }))
+        }
         onTabClose={handleCloseTab}
       />
     </div>
