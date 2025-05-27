@@ -1,4 +1,4 @@
-import React, { useState, KeyboardEvent, useEffect, useCallback } from 'react';
+import { useState, KeyboardEvent, useEffect, useCallback } from 'react';
 import { Search, Star, StarOff } from 'lucide-react';
 import { Bookmark, getDomainFromUrl } from '../types';
 
@@ -15,7 +15,7 @@ export function AddressBar({ currentUrl, onNavigate }: AddressBarProps) {
 
   const checkIsBookmarked = useCallback(async (url: string) => {
     const bookmarks = await getBookmarksFromStorage();
-    const found = bookmarks.find(b => b.url === url);
+    const found = bookmarks.find((b) => b.url === url);
     setIsBookmarked(!!found);
   }, []);
 
@@ -53,7 +53,9 @@ export function AddressBar({ currentUrl, onNavigate }: AddressBarProps) {
   };
 
   const getBookmarksFromStorage = (): Promise<Bookmark[]> => {
-    return Promise.resolve(JSON.parse(localStorage.getItem('bookmarks') || '[]'));
+    return Promise.resolve(
+      JSON.parse(localStorage.getItem('bookmarks') || '[]')
+    );
   };
 
   const saveBookmarksToStorage = (bookmarks: Bookmark[]): Promise<void> => {
@@ -65,7 +67,7 @@ export function AddressBar({ currentUrl, onNavigate }: AddressBarProps) {
     const bookmarks = await getBookmarksFromStorage();
 
     if (isBookmarked) {
-      const newBookmarks = bookmarks.filter(b => b.url !== currentUrl);
+      const newBookmarks = bookmarks.filter((b) => b.url !== currentUrl);
       await saveBookmarksToStorage(newBookmarks);
       setIsBookmarked(false);
     } else {
@@ -73,7 +75,7 @@ export function AddressBar({ currentUrl, onNavigate }: AddressBarProps) {
         id: Date.now().toString(),
         url: currentUrl,
         title: getDomainFromUrl(currentUrl),
-        createdAt: Date.now()
+        createdAt: Date.now(),
       };
       await saveBookmarksToStorage([...bookmarks, newBookmark]);
       setIsBookmarked(true);

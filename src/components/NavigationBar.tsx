@@ -1,4 +1,3 @@
-import React from 'react';
 import { ChevronLeft, ChevronRight, RefreshCw, Plus } from 'lucide-react';
 import { TabCounter } from './TabCounter';
 import { Tab, UserType } from '../types';
@@ -66,7 +65,7 @@ export function NavigationBar({
           onClick={onRefresh}
           className="w-10 h-10 p-3 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
         >
-        <RefreshCw className="text-xl dark:text-gray-400" />
+          <RefreshCw className="text-xl dark:text-gray-400" />
         </button>
       </div>
       <div className="flex-1 min-w-0">
@@ -87,7 +86,9 @@ export function NavigationBar({
         </div>
 
         <div className="flex items-center gap-2">
-          <ThemeToggle onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')} />
+          <ThemeToggle
+            onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+          />
           <UserAvatar
             currentUser={currentUser}
             onLogout={onLogout}

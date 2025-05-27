@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { NavigationBar } from './NavigationBar';
 import { TabBar } from './TabBar';
@@ -6,6 +6,7 @@ import { TabCardView } from './TabCardView';
 import NewTabPage from './NewTabPage';
 import { BrowserState, Tab, getDomainFromUrl } from '../types';
 import { ShieldAlert } from 'lucide-react';
+import useStateRef from 'react-usestateref';
 
 const createNewTab = (): Tab => ({
   id: uuidv4(),
@@ -23,15 +24,19 @@ const findEmptyTab = (tabs: Tab[]): string | null => {
 
 export function Browser() {
   const initialTab = createNewTab();
-  const [browserState, setBrowserState] = useState<BrowserState>({
-    tabs: [initialTab],
-    activeTabId: initialTab.id,
-  });
+  const [browserState, setBrowserState, browserStateRef] =
+    useStateRef<BrowserState>({
+      tabs: [initialTab],
+      activeTabId: initialTab.id,
+    });
+
   const [isTabViewOpen, setIsTabViewOpen] = useState(false);
 
-  const activeTab = browserState.tabs.find(
-    (tab) => tab.id === browserState.activeTabId
-  )!;
+  const activeTab = () => {
+    return browserStateRef.current.tabs.find(
+      (tab) => tab.id === browserState.activeTabId
+    )!;
+  };
 
   const updateActiveTab = (updates: Partial<Tab>) => {
     setBrowserState((prev) => ({
@@ -43,8 +48,8 @@ export function Browser() {
   };
 
   const handleNavigate = (url: string) => {
-    const newHistory = activeTab.history
-      .slice(0, activeTab.currentHistoryIndex + 1)
+    const newHistory = activeTab()
+      .history.slice(0, activeTab().currentHistoryIndex + 1)
       .concat(url);
     updateActiveTab({
       url,
@@ -91,20 +96,20 @@ export function Browser() {
   };
 
   const handleBack = () => {
-    if (activeTab.currentHistoryIndex > 0) {
+    if (activeTab().currentHistoryIndex > 0) {
       updateActiveTab({
-        currentHistoryIndex: activeTab.currentHistoryIndex - 1,
-        url: activeTab.history[activeTab.currentHistoryIndex - 1],
+        currentHistoryIndex: activeTab().currentHistoryIndex - 1,
+        url: activeTab().history[activeTab().currentHistoryIndex - 1],
         error: null,
       });
     }
   };
 
   const handleForward = () => {
-    if (activeTab.currentHistoryIndex < activeTab.history.length - 1) {
+    if (activeTab().currentHistoryIndex < activeTab().history.length - 1) {
       updateActiveTab({
-        currentHistoryIndex: activeTab.currentHistoryIndex + 1,
-        url: activeTab.history[activeTab.currentHistoryIndex + 1],
+        currentHistoryIndex: activeTab().currentHistoryIndex + 1,
+        url: activeTab().history[activeTab().currentHistoryIndex + 1],
         error: null,
       });
     }
@@ -113,7 +118,7 @@ export function Browser() {
   const handleRefresh = () => {
     updateActiveTab({ error: null }); // Clear any previous errors
     const iframe = document.querySelector(
-      `iframe[data-tab-id="${activeTab.id}"]`
+      `iframe[data-tab-id="${activeTab().id}"]`
     ) as HTMLIFrameElement;
     if (iframe) {
       const currentSrc = iframe.src;
@@ -137,34 +142,49 @@ export function Browser() {
       try {
         const iframe = event.target as HTMLIFrameElement;
         const title =
-          iframe.contentDocument?.title || getDomainFromUrl(activeTab.url);
+          iframe.contentDocument?.title || getDomainFromUrl(activeTab().url);
         updateActiveTab({ title });
       } catch (error) {
-        const title = getDomainFromUrl(activeTab.url);
+        const title = getDomainFromUrl(activeTab().url);
         updateActiveTab({ title });
       }
     },
-    [activeTab.url]
+    []
   );
 
-  const isCurrentTabNewTabPage = activeTab.url === '';
+  const isCurrentTabNewTabPage = activeTab().url === '';
 
-  const handleLinkClick = (event: MessageEvent) => {
+  const handleMessage = (event: MessageEvent) => {
     if (event.data.action === 'open_url') {
-      const newTab = createNewTab();
-      newTab.url = event.data.url as string;
-      setBrowserState((prev) => ({
-        ...prev,
-        tabs: [...prev.tabs, newTab],
-        activeTabId: newTab.id,
-      }));
+      console.info('Received message event:', event);
+      let url = event.data.url as string;
+      if (url.startsWith('/')) {
+        url = `${event.origin}${url}`;
+      }
+      switch (event.data.target) {
+        case '_blank': {
+          const newTab = createNewTab();
+          newTab.url = url;
+          setBrowserState((prev) => ({
+            ...prev,
+            tabs: [...prev.tabs, newTab],
+            activeTabId: newTab.id,
+          }));
+          break;
+        }
+
+        default: {
+          console.log('Navigating to:', url);
+          handleNavigate(url as string);
+        }
+      }
     }
   };
 
   useEffect(() => {
-    window.addEventListener('message', handleLinkClick);
+    window.addEventListener('message', handleMessage);
     return () => {
-      window.removeEventListener('message', handleLinkClick);
+      window.removeEventListener('message', handleMessage);
     };
   }, []);
 
@@ -237,7 +257,7 @@ export function Browser() {
                 onError={handleIframeError}
                 title={tab.title}
                 data-tab-id={tab.id}
-                allowfullscreen
+                allowFullScreen
                 allow="fullscreen"
                 sandbox="allow-forms allow-scripts allow-same-origin allow-modals allow-pointer-lock allow-popups allow-presentation"
               />
