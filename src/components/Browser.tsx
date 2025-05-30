@@ -179,6 +179,15 @@ export function Browser() {
         }
       }
     }
+
+    if (event.data.action === 'ANYSEE') {
+      const iframe = document.getElementsByTagName('iframe');
+      for (let i = 0; i < iframe.length; i++) {
+        if (iframe[i].contentWindow) {
+          iframe[i].contentWindow?.postMessage({ action: 'ANYSEE_YES' }, '*');
+        }
+      }
+    }
   };
 
   useEffect(() => {
