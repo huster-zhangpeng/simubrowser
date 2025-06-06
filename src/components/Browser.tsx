@@ -48,6 +48,8 @@ export function Browser() {
   };
 
   const handleNavigate = (url: string) => {
+    if (activeTab().url == url) return;
+
     const newHistory = activeTab()
       .history.slice(0, activeTab().currentHistoryIndex + 1)
       .concat(url);
