@@ -15,8 +15,8 @@ interface NavigationBarProps {
   tabs: Tab[];
   onTabViewOpen: () => void;
   onNewTab: () => void;
-  currentUrl: string;
-  onNavigate: (url: string) => void;
+  currentUrl: () => string;
+  onNavigate: (url: string, type: string) => void;
   currentUser?: UserType;
   onLogout?: () => void;
   onSettings?: () => void;
