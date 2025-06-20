@@ -5,25 +5,34 @@ import Bookmark from './Bookmark';
 interface BookmarkBarProps {
   bookmarks: BookmarkType[];
   onUpdateBookmarks: (bookmarks: BookmarkType[]) => void;
-  onNavigate: (url: string) => void;
+  onNavigate: (url: string, type: string) => void;
 }
 
-const BookmarkBar: React.FC<BookmarkBarProps> = ({ bookmarks, onUpdateBookmarks, onNavigate }) => {
+const BookmarkBar: React.FC<BookmarkBarProps> = ({
+  bookmarks,
+  onUpdateBookmarks,
+  onNavigate,
+}) => {
   const [isDeleteMode, setIsDeleteMode] = useState(false);
 
   const handleLongPress = useCallback(() => {
     setIsDeleteMode(true);
   }, []);
 
-  const handleDelete = useCallback((id: string) => {
-    const updatedBookmarks = bookmarks.filter(bookmark => bookmark.id !== id);
-    onUpdateBookmarks(updatedBookmarks);
-    localStorage.setItem('bookmarks', JSON.stringify(updatedBookmarks));
-    
-    if (updatedBookmarks.length === 0) {
-      setIsDeleteMode(false);
-    }
-  }, [bookmarks, onUpdateBookmarks]);
+  const handleDelete = useCallback(
+    (id: string) => {
+      const updatedBookmarks = bookmarks.filter(
+        (bookmark) => bookmark.id !== id
+      );
+      onUpdateBookmarks(updatedBookmarks);
+      localStorage.setItem('bookmarks', JSON.stringify(updatedBookmarks));
+
+      if (updatedBookmarks.length === 0) {
+        setIsDeleteMode(false);
+      }
+    },
+    [bookmarks, onUpdateBookmarks]
+  );
 
   const handleClickOutside = useCallback((e: MouseEvent) => {
     const target = e.target as HTMLElement;
@@ -48,7 +57,7 @@ const BookmarkBar: React.FC<BookmarkBarProps> = ({ bookmarks, onUpdateBookmarks,
   return (
     <div className="bookmark-container w-full max-w-screen-lg mx-auto py-1 sm:py-2 overflow-x-auto snap-x touch-pan-x">
       <div className="flex flex-nowrap gap-2 px-4 min-w-full">
-        {bookmarks.map(bookmark => (
+        {bookmarks.map((bookmark) => (
           <div key={bookmark.id} className="flex-none snap-start">
             <Bookmark
               bookmark={bookmark}

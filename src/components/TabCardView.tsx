@@ -64,9 +64,11 @@ export function TabCardView({
               onClick={() => handleTabClick(tab.id)}
               className={`
                 relative group cursor-pointer rounded-lg overflow-hidden border
-                ${tab.id === activeTabId
-                  ? 'border-blue-500 dark:border-blue-400'
-                  : 'border-gray-200 dark:border-gray-700'}
+                ${
+                  tab.id === activeTabId
+                    ? 'border-blue-500 dark:border-blue-400'
+                    : 'border-gray-200 dark:border-gray-700'
+                }
                 hover:border-blue-500 dark:hover:border-blue-400
                 transition-colors duration-200
               `}
@@ -80,15 +82,18 @@ export function TabCardView({
                     sandbox=""
                   />
                 ) : (
-                  <NewTabPage onNavigate={onNavigate} className="h-full w-full pointer-events-none" />
+                  <NewTabPage
+                    onNavigate={onNavigate}
+                    className="h-full w-full pointer-events-none"
+                  />
                 )}
               </div>
               <div className="p-2 bg-white dark:bg-gray-900">
                 <p className="text-sm font-medium truncate dark:text-white">
-                  {tab.title || "New Tab"}
+                  {tab.title || 'New Tab'}
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                  {tab.url || "browser://newtab"}
+                  {tab.url || 'browser://newtab'}
                 </p>
               </div>
               <button
