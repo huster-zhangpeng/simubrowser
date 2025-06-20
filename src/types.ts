@@ -1,10 +1,16 @@
 export interface Tab {
   id: string;
   url: string;
+  addr: string;
   title: string;
-  history: string[];
+  history: History[];
   currentHistoryIndex: number;
   error: string | null;
+}
+
+export interface History {
+  addr: string;
+  type: string;
 }
 
 export interface BrowserState {
@@ -105,6 +111,7 @@ export function getDomainFromUrl(url: string): string {
     const urlObj = new URL(url);
     return urlObj.hostname;
   } catch (error) {
+    console.error('Invalid URL:', url, error);
     return url;
   }
 }

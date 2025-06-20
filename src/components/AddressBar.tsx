@@ -5,12 +5,12 @@ import { Bookmark, getDomainFromUrl } from '../types';
 const RESERVED_SUBDOMAINS = ['doc', 'docs', 'www', 'console', 'api'];
 
 interface AddressBarProps {
-  currentUrl: string;
-  onNavigate: (url: string) => void;
+  currentUrl: () => string;
+  onNavigate: (url: string, type: string) => void;
 }
 
 export function AddressBar({ currentUrl, onNavigate }: AddressBarProps) {
-  const [inputValue, setInputValue] = useState(currentUrl);
+  const [inputValue, setInputValue] = useState(currentUrl());
   const [isBookmarked, setIsBookmarked] = useState(false);
 
   const checkIsBookmarked = useCallback(async (url: string) => {
@@ -20,7 +20,11 @@ export function AddressBar({ currentUrl, onNavigate }: AddressBarProps) {
   }, []);
 
   useEffect(() => {
-    checkIsBookmarked(currentUrl);
+    setInputValue(currentUrl());
+  }, [currentUrl]);
+
+  useEffect(() => {
+    checkIsBookmarked(currentUrl());
   }, [currentUrl, checkIsBookmarked]);
 
   const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -48,7 +52,7 @@ export function AddressBar({ currentUrl, onNavigate }: AddressBarProps) {
           url = `https://${url}`;
         }
       }
-      onNavigate(url);
+      onNavigate(url, '_self');
     }
   };
 
@@ -67,14 +71,14 @@ export function AddressBar({ currentUrl, onNavigate }: AddressBarProps) {
     const bookmarks = await getBookmarksFromStorage();
 
     if (isBookmarked) {
-      const newBookmarks = bookmarks.filter((b) => b.url !== currentUrl);
+      const newBookmarks = bookmarks.filter((b) => b.url !== currentUrl());
       await saveBookmarksToStorage(newBookmarks);
       setIsBookmarked(false);
     } else {
       const newBookmark: Bookmark = {
         id: Date.now().toString(),
-        url: currentUrl,
-        title: getDomainFromUrl(currentUrl),
+        url: currentUrl(),
+        title: getDomainFromUrl(currentUrl()),
         createdAt: Date.now(),
       };
       await saveBookmarksToStorage([...bookmarks, newBookmark]);
