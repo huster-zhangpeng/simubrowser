@@ -193,7 +193,7 @@ export function Browser() {
       `iframe[data-tab-id="${activeTab().id}"]`
     ) as HTMLIFrameElement;
     if (iframe) {
-      const currentSrc = iframe.src;
+      const currentSrc = activeTab().addr;
       iframe.src = 'about:blank';
       setTimeout(() => {
         iframe.src = currentSrc;
